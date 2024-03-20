@@ -49,20 +49,27 @@ namespace GGPokerRNG
             tableLabels = new Dictionary<IntPtr, Label>();
             this.ShowInTaskbar = false;
 
-            try
-            {
-                GGPokerProcessId = GetGGPokerProcessId(GGPokerProcessName);
-            }
-            catch (Exception ex)
-            {
-                //MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
+            UpdateGGPokerProcessId();
             ConfigureTray();
             StartTableCheckTimer();
             StartLabelUpdateTimer();
             StartLabelLocationTimer();
         }
+
+        private void UpdateGGPokerProcessId()
+        {
+            try
+            {
+                GGPokerProcessId = GetGGPokerProcessId(GGPokerProcessName);
+                Debug.WriteLine($"GGPoker Process ID: {GGPokerProcessId}");
+            }
+            catch (Exception ex)
+            {
+                // Optionally handle the case where GGPoker is not running
+                Debug.WriteLine($"GGPoker Process not found: {ex.Message}");
+            }
+        }
+
 
         private void StartLabelLocationTimer()
         {
@@ -310,6 +317,14 @@ namespace GGPokerRNG
 
         private void CheckForOpenTables(object? sender, EventArgs e)
         {
+            if (GGPokerProcessId == 0)
+            {
+                UpdateGGPokerProcessId();
+
+                // If still not found, skip the rest of the method
+                if (GGPokerProcessId == 0) return;
+            }
+
             IntPtr foregroundWindow = GetForegroundWindow();
             var windows = WindowHelper.GetOpenWindows();
 
