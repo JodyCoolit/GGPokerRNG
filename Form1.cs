@@ -49,20 +49,27 @@ namespace GGPokerRNG
             tableLabels = new Dictionary<IntPtr, Label>();
             this.ShowInTaskbar = false;
 
-            try
-            {
-                GGPokerProcessId = GetGGPokerProcessId(GGPokerProcessName);
-            }
-            catch (Exception ex)
-            {
-                //MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
+            UpdateGGPokerProcessId();
             ConfigureTray();
             StartTableCheckTimer();
             StartLabelUpdateTimer();
             StartLabelLocationTimer();
         }
+
+        private void UpdateGGPokerProcessId()
+        {
+            try
+            {
+                GGPokerProcessId = GetGGPokerProcessId(GGPokerProcessName);
+                Debug.WriteLine($"GGPoker Process ID: {GGPokerProcessId}");
+            }
+            catch (Exception ex)
+            {
+                // Optionally handle the case where GGPoker is not running
+                Debug.WriteLine($"GGPoker Process not found: {ex.Message}");
+            }
+        }
+
 
         private void StartLabelLocationTimer()
         {
@@ -308,8 +315,49 @@ namespace GGPokerRNG
             return IsIconic(hWnd);
         }
 
+        private void HideAllLabels()
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
+                foreach (var label in tableLabels.Values)
+                {
+                    label.Visible = false;
+                }
+            });
+        }
+
+        private bool IsProcessRunning(uint processId)
+        {
+            try
+            {
+                var process = Process.GetProcessById((int)processId);
+                return !process.HasExited;
+            }
+            catch
+            {
+                // Process with the given ID does not exist.
+                return false;
+            }
+        }
+
         private void CheckForOpenTables(object? sender, EventArgs e)
         {
+            if (GGPokerProcessId != 0 && !IsProcessRunning(GGPokerProcessId))
+            {
+                GGPokerProcessId = 0;  // Reset the ID because GGPoker was closed.
+
+                // Optionally hide all labels since GGPoker is not running.
+                HideAllLabels();
+            }
+
+            if (GGPokerProcessId == 0)
+            {
+                UpdateGGPokerProcessId();
+
+                // If still not found, skip the rest of the method
+                if (GGPokerProcessId == 0) return;
+            }
+
             IntPtr foregroundWindow = GetForegroundWindow();
             var windows = WindowHelper.GetOpenWindows();
 
@@ -352,6 +400,16 @@ namespace GGPokerRNG
             }
         }
 
+        private void Log(string message)
+        {
+            // For simplicity, logging to the console.
+            // Replace this with logging to a file or use a logging framework as needed.
+            Console.WriteLine(message);
+
+            // If you want to log to a file, you could use something like:
+            // File.AppendAllText("log.txt", message + Environment.NewLine);
+        }
+
 
         private uint GetGGPokerProcessId(string partialProcessName)
         {
@@ -364,7 +422,9 @@ namespace GGPokerRNG
             }
             else
             {
-                throw new InvalidOperationException($"No process with a name containing {partialProcessName} found.");
+                Log($"No process with a name containing {partialProcessName} found.");
+                return 0;
+                //throw new InvalidOperationException($"No process with a name containing {partialProcessName} found.");
             }
         }
 
