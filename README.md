@@ -4,13 +4,35 @@ GGPoker RNG is a desktop application designed to enhance your experience by mana
 
 ## Installation
 
-To install GGPoker RNG, follow these steps:
+There are two methods to install GGPoker RNG:
 
-1. Clone the repository.
-2. Extract the `Release.rar` file using a file archiver tool like WinRAR or 7-Zip. You can typically right-click on the file and choose `Extract Here`.
-3. Open the extracted folder.
+### Precompiled Release
 
-OR download a visual studio and build by yourself.
+1. **Download the latest release**:
+   - Go to the [Releases](https://github.com/JodyCoolit/GGPokerRNG/releases) page of the GGPokerRNG repository.
+   - Download the `GGPokerRNG.rar` file from the latest release.
+
+2. **Extract the Release package**:
+   - Use a file archiver tool like WinRAR or 7-Zip to extract the `GGPokerRNG.rar` file. Right-click on the file and choose `Extract Here`, or use the archiver's interface to extract it to a chosen directory.
+
+3. **Run the application**:
+   - Navigate to the extracted folder.
+   - Run `GGPokerRNG.exe` to start the application.
+
+### Building from Source
+
+1. **Clone the repository**:
+2. **Open the solution in Visual Studio**:
+- Launch Visual Studio.
+- Open the `GGPokerRNG.sln` file located in the cloned repository.
+
+3. **Build the solution**:
+- Select `Build > Build Solution` from the menu to compile the project.
+
+4. **Run the application**:
+- Navigate to the `bin/Release` or `bin/Debug` directory inside the cloned repository.
+- Run `GGPokerRNG.exe` to start the application.
+
 
 ## Usage
 
